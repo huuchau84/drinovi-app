@@ -48,8 +48,6 @@
             .header-bar h2 {
                 font-size: 20px;
                 color: var(--primary);
-                cursor: pointer; /* Nhấn 3 lần để mở thống kê bí mật */
-                user-select: none;
             }
 
         .lang-switch select {
@@ -64,7 +62,7 @@
             cursor: pointer;
         }
 
-        /* Menu Tabs (Đã ẩn tab thống kê khỏi giao diện chung) */
+        /* Menu Tabs */
         .nav-tabs {
             display: flex;
             gap: 8px;
@@ -481,9 +479,9 @@
 <body>
 
     <div class="container">
-        <!-- Header: Bấm liên tiếp 3 lần vào tiêu đề này để mở trang Thống kê bí mật -->
+        <!-- Header -->
         <div class="header-bar">
-            <h2 onclick="handleSecretClick()" title="Bấm 3 lần liên tiếp để mở thống kê">Thi Bằng Lái Xe Na Uy</h2>
+            <h2>Thi Bằng Lái Xe Na Uy</h2>
             <div class="lang-switch">
                 <select id="langSelect" onchange="changeLanguage()">
                     <option value="en">🇬🇧 Ngôn ngữ: Tiếng Anh</option>
@@ -492,11 +490,12 @@
             </div>
         </div>
 
-        <!-- Menu Tabs (Đã ẩn nút Thống kê, khách truy cập không nhìn thấy) -->
+        <!-- Menu Tabs: Đã có đủ 4 tab cho người học -->
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="switchTab('practice')">Ôn tập lý thuyết</button>
             <button class="tab-btn" onclick="switchTab('mock-exam')">Thi thử (45 câu)</button>
             <button class="tab-btn" onclick="switchTab('signs')">Thư viện biển báo</button>
+            <button class="tab-btn" onclick="switchTab('stats')">📊 Thống kê</button>
         </div>
 
         <!-- TAB 1: ÔN TẬP -->
@@ -552,30 +551,27 @@
             <div id="signs-grid" class="signs-grid"></div>
         </div>
 
-        <!-- TAB 4: THỐNG KÊ (BÍ MẬT) -->
+        <!-- TAB 4: THỐNG KÊ CÁ NHÂN -->
         <div id="tab-stats" class="tab-content">
             <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="color: var(--primary);">📈 Bảng Thống Kê Học Tập (Riêng tư)</h3>
-                    <button class="btn-action" style="background: var(--text-muted); padding: 6px 12px; font-size: 13px;" onclick="switchTab('practice')">Quay lại Ôn tập</button>
-                </div>
+                <h3 style="margin-bottom: 20px; color: var(--primary);">📊 Tiến độ học tập của bạn</h3>
 
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-label">Lượt truy cập ứng dụng</div>
+                        <div class="stat-label">Số lần truy cập</div>
                         <div id="stat-visits" class="stat-number">0</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Số câu đã ôn tập</div>
+                        <div class="stat-label">Số câu đã học</div>
                         <div id="stat-answered" class="stat-number">0</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Tổng số câu trong hệ thống</div>
-                        <div id="stat-total" class="stat-number">0</div>
+                        <div class="stat-label">Số lần thi thử</div>
+                        <div id="stat-exams" class="stat-number">0</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Số bài thi thử đã làm</div>
-                        <div id="stat-exams" class="stat-number">0</div>
+                        <div class="stat-label">Số lần thi đạt (&ge;38)</div>
+                        <div id="stat-passed" class="stat-number" style="color: var(--success);">0</div>
                     </div>
                 </div>
 
@@ -610,26 +606,8 @@
         let savedAnswers = {};
         let isSavingEnabled = false;
         let totalExamsTaken = 0;
+        let totalExamsPassed = 0;
         let visitCount = 0;
-
-        // Biến đếm phục vụ tính năng bấm 3 lần mở khóa thống kê bí mật
-        let secretClickCount = 0;
-        let secretClickTimer = null;
-
-        function handleSecretClick() {
-            secretClickCount++;
-            if (secretClickTimer) clearTimeout(secretClickTimer);
-
-            if (secretClickCount >= 3) {
-                secretClickCount = 0;
-                switchTab('stats');
-                alert("Đã mở khóa trang Thống kê bí mật thành công!");
-            } else {
-                secretClickTimer = setTimeout(() => {
-                    secretClickCount = 0;
-                }, 600);
-            }
-        }
 
         // Quản lý ngôn ngữ
         function changeLanguage() {
@@ -666,6 +644,9 @@
             const savedExams = localStorage.getItem('drivingAppExams');
             if (savedExams) totalExamsTaken = parseInt(savedExams, 10);
 
+            const savedPassed = localStorage.getItem('drivingAppPassed');
+            if (savedPassed) totalExamsPassed = parseInt(savedPassed, 10);
+
             if (isSavingEnabled) {
                 const cacheStr = localStorage.getItem('drivingAppCache');
                 if (cacheStr) {
@@ -677,11 +658,6 @@
                         clickedVocabs = new Set(data.vocabs || []);
                     }
                 }
-            }
-
-            // Nếu bác gõ trực tiếp đường dẫn có chứa #stats trên trình duyệt, tự động mở trang thống kê
-            if (window.location.hash === '#stats') {
-                switchTab('stats');
             }
         }
 
@@ -698,6 +674,7 @@
             localStorage.setItem('drivingAppCache', JSON.stringify(data));
             localStorage.setItem('cacheDuration', hours);
             localStorage.setItem('drivingAppExams', totalExamsTaken);
+            localStorage.setItem('drivingAppPassed', totalExamsPassed);
         }
 
         function toggleSaveProgress() {
@@ -715,9 +692,11 @@
         function clearHistory(showAlert = true) {
             localStorage.removeItem('drivingAppCache');
             localStorage.removeItem('drivingAppExams');
+            localStorage.removeItem('drivingAppPassed');
             savedAnswers = {};
             clickedVocabs.clear();
             totalExamsTaken = 0;
+            totalExamsPassed = 0;
             if (showAlert) alert('Đã xóa lịch sử học tập thành công!');
             renderPracticeQuestions(true);
         }
@@ -731,15 +710,15 @@
 
             document.getElementById('stat-visits').innerText = visitCount;
             document.getElementById('stat-answered').innerText = `${answeredCount} / ${totalQuestions}`;
-            document.getElementById('stat-total').innerText = totalQuestions;
             document.getElementById('stat-exams').innerText = totalExamsTaken;
+            document.getElementById('stat-passed').innerText = totalExamsPassed;
 
             const adviceEl = document.getElementById('stat-advice');
             if (answeredCount === 0 && totalExamsTaken === 0) {
                 adviceEl.innerText = "Bạn chưa bắt đầu ôn tập. Hãy chuyển sang tab 'Ôn tập lý thuyết' để làm các câu hỏi đầu tiên nhé!";
             } else {
                 const percent = Math.round((answeredCount / (totalQuestions || 1)) * 100);
-                adviceEl.innerText = `Bạn đã hoàn thành ${percent}% lượng câu hỏi ôn tập (${answeredCount}/${totalQuestions} câu) và hoàn thành ${totalExamsTaken} bài thi thử. Hãy tiếp tục duy trì phong độ này nhé!`;
+                adviceEl.innerText = `Bạn đã hoàn thành ${percent}% lượng câu hỏi ôn tập (${answeredCount}/${totalQuestions} câu), tham gia thi thử ${totalExamsTaken} lần và đạt yêu cầu ${totalExamsPassed} lần. Hãy tiếp tục cố gắng để đạt kết quả tốt nhất trong kỳ thi thực tế tại Na Uy nhé!`;
             }
         }
 
@@ -785,7 +764,7 @@
                 document.getElementById('tab-signs').classList.add('active');
                 renderSigns();
             } else if (targetTab === 'stats') {
-                // Tab thống kê không nằm trên menu, nên ta chỉ hiện nội dung card thống kê
+                document.querySelectorAll('.tab-btn')[3].classList.add('active');
                 document.getElementById('tab-stats').classList.add('active');
                 updateStatsDashboard();
             }
@@ -974,9 +953,6 @@
             let score = 0;
 
             totalExamsTaken++;
-            if (isSavingEnabled) {
-                saveDataToLocal();
-            }
 
             document.querySelectorAll('.vi-text-exam').forEach(el => el.style.display = 'block');
 
@@ -1013,6 +989,14 @@
             });
 
             const isPassed = score >= 38;
+            if (isPassed) {
+                totalExamsPassed++;
+            }
+
+            if (isSavingEnabled) {
+                saveDataToLocal();
+            }
+
             document.getElementById('exam-result').innerHTML = `
                         <div class="exam-result-box" style="border-color: ${isPassed ? 'var(--success)' : 'var(--danger)'}">
                           <h2 style="color: ${isPassed ? 'var(--success)' : 'var(--danger)'}">
