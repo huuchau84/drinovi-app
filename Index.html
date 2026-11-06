@@ -513,6 +513,43 @@
                 border-radius: 6px;
                 cursor: pointer;
             }
+
+        /* About Tab Styling */
+        .about-content {
+            line-height: 1.8;
+            font-size: 15.5px;
+            color: #3c4043;
+        }
+
+            .about-content p {
+                margin-bottom: 16px;
+            }
+
+        .contact-box {
+            background-color: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 24px;
+        }
+
+            .contact-box h4 {
+                color: var(--primary);
+                margin-bottom: 12px;
+                font-size: 17px;
+            }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+            .contact-item svg {
+                margin-right: 12px;
+                fill: var(--primary);
+            }
     </style>
 </head>
 <body>
@@ -534,8 +571,8 @@
             <button class="tab-btn active" onclick="switchTab('practice')">Ôn tập lý thuyết</button>
             <button class="tab-btn" onclick="switchTab('mock-exam')">Thi thử (45 câu)</button>
             <button class="tab-btn" onclick="switchTab('signs')">Thư viện biển báo</button>
-            <!-- Nút thống kê công khai (khách xem được) -->
             <button class="tab-btn" onclick="switchTab('stats')">📊 Thống kê</button>
+            <button class="tab-btn" onclick="switchTab('about')">ℹ️ Về ứng dụng</button>
         </div>
 
         <!-- TAB 1: ÔN TẬP -->
@@ -555,13 +592,8 @@
                 <button class="btn-action" style="background: var(--danger); padding: 8px 16px; font-size: 14px;" onclick="clearHistory()">🔄 Xóa lịch sử & Học lại</button>
             </div>
 
-            <!-- Thanh phân trang trên -->
             <div id="pagination-top" class="pagination-bar"></div>
-
-            <!-- Nơi chứa nội dung câu hỏi hiện tại -->
             <div id="practice-container"></div>
-
-            <!-- Thanh phân trang dưới -->
             <div id="pagination-bottom" class="pagination-bar"></div>
         </div>
 
@@ -625,6 +657,35 @@
                 <div style="background: var(--primary-light); padding: 16px; border-radius: 8px; border: 1px solid #cddc39;">
                     <h4 style="margin-bottom: 8px; color: var(--primary);">💡 Đánh giá năng lực:</h4>
                     <p id="stat-advice" style="font-size: 15px;">Bạn chưa bắt đầu ôn tập. Hãy chuyển sang tab "Ôn tập lý thuyết" để bắt đầu làm bài nhé!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: VỀ ỨNG DỤNG -->
+        <div id="tab-about" class="tab-content">
+            <div class="card about-content">
+                <h3 style="color: var(--primary); margin-bottom: 16px; font-size: 22px;">Lời ngỏ chân thành gửi đến cộng đồng</h3>
+
+                <p>Thân chào các bạn,</p>
+
+                <p>Trang web này được xây dựng với một mục đích nhỏ bé và giản dị: mong muốn được góp một phần công sức giúp đỡ mọi người có thêm nguồn tài liệu tham khảo, ôn luyện kiến thức trước khi bước vào kỳ thi lý thuyết lái xe tại Na Uy. Đồng thời, qua việc đối chiếu song ngữ, hy vọng đây cũng là một dịp tốt để chúng ta cùng nhau trau dồi và nâng cao vốn từ vựng tiếng Anh cũng như tiếng Na Uy (Norsk).</p>
+
+                <p>Nội dung các câu hỏi và hình ảnh trên trang web chủ yếu là sản phẩm của quá trình thu thập, chắt lọc và tổng hợp từ nhiều nguồn khác nhau trên internet. Chính vì thế, tôi hiểu rằng hệ thống dữ liệu chắc chắn sẽ không tránh khỏi những thiếu sót, điểm hạn chế, hoặc đôi chỗ dịch thuật chưa thực sự sát nghĩa chuyên ngành.</p>
+
+                <p>Với tinh thần cầu thị và luôn mong muốn hoàn thiện, tôi rất mong sẽ nhận được sự lượng thứ cũng như những ý kiến đóng góp, phản hồi chân thành từ phía mọi người. Hy vọng rằng, cùng với sự chung tay xây dựng của cộng đồng, trang web này sẽ ngày càng hoàn thiện hơn, trở thành một sự lựa chọn hữu ích và người bạn đồng hành đáng tin cậy cho cộng đồng người Việt — đặc biệt là những anh chị em mới sang định cư và hòa nhập cuộc sống tại Na Uy.</p>
+
+                <p>Xin chân thành cảm ơn và chúc mọi người ôn tập thật tốt, thi đạt kết quả cao!</p>
+
+                <div class="contact-box">
+                    <h4>Thông tin liên hệ & Góp ý:</h4>
+                    <div class="contact-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" /></svg>
+                        Email: <a href="mailto:cucgaxh@gmail.com" style="color: var(--primary); text-decoration: none; margin-left: 6px;">cucgaxh@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" /></svg>
+                        Điện thoại: <a href="tel:+4793648080" style="color: var(--primary); text-decoration: none; margin-left: 6px;">(+47) 93648080</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -727,6 +788,8 @@
 
             if (window.location.hash === '#stats') {
                 switchTab('stats');
+            } else if (window.location.hash === '#about') {
+                switchTab('about');
             }
         }
 
@@ -836,27 +899,28 @@
                 document.querySelectorAll('.tab-btn')[3].classList.add('active');
                 document.getElementById('tab-stats').classList.add('active');
                 updateStatsDashboard();
+            } else if (targetTab === 'about') {
+                document.querySelectorAll('.tab-btn')[4].classList.add('active');
+                document.getElementById('tab-about').classList.add('active');
             }
         }
 
         // ==========================================
-        // TAB 1: RENDER ÔN TẬP CÓ PHÂN TRANG (66 câu/trang, tối ưu render)
+        // TAB 1: RENDER ÔN TẬP CÓ PHÂN TRANG
         // ==========================================
         function changePage(page) {
             currentPage = page;
             renderPracticeQuestions();
-            window.scrollTo({ top: 0, behavior: 'smooth' }); // Tự động cuộn lên đầu khi chuyển trang
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function renderPaginationControls(totalPages) {
             let html = '';
-            // Nút Về trang đầu và Trước
             if (currentPage > 1) {
                 html += `<button class="page-btn" onclick="changePage(1)">« Đầu</button>`;
                 html += `<button class="page-btn" onclick="changePage(${currentPage - 1})">‹ Trước</button>`;
             }
 
-            // Hiển thị tối đa các trang xung quanh trang hiện tại (3 trang trước, 3 trang sau)
             let startPage = Math.max(1, currentPage - 3);
             let endPage = Math.min(totalPages, currentPage + 3);
 
@@ -864,7 +928,6 @@
                 html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
             }
 
-            // Nút Tới trang sau và Cuối
             if (currentPage < totalPages) {
                 html += `<button class="page-btn" onclick="changePage(${currentPage + 1})">Sau ›</button>`;
                 html += `<button class="page-btn" onclick="changePage(${totalPages})">Cuối »</button>`;
@@ -880,22 +943,17 @@
 
             const totalPages = Math.ceil(totalQuestions / ITEMS_PER_PAGE);
 
-            // Bảo vệ an toàn cho biến trang
             if (currentPage > totalPages) currentPage = totalPages;
             if (currentPage < 1) currentPage = 1;
 
             const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
             const endIndex = startIndex + ITEMS_PER_PAGE;
-
-            // Chỉ trích xuất và render 66 câu hỏi của trang hiện tại
             const currentQuestions = questionsData.slice(startIndex, endIndex);
 
-            // Cập nhật thanh điều hướng
             const paginationHTML = renderPaginationControls(totalPages);
             document.getElementById('pagination-top').innerHTML = paginationHTML;
             document.getElementById('pagination-bottom').innerHTML = paginationHTML;
 
-            // Xây dựng mã HTML cực nhanh chỉ cho 66 câu
             container.innerHTML = currentQuestions.map((q) => {
                 const qhtml = (q.question && q.question[currentLang]) ? q.question[currentLang] : (q.question && q.question.en ? q.question.en : '');
                 const qViet = (q.question && q.question.vi) ? q.question.vi : '';
@@ -933,7 +991,6 @@
 
             restoreClickedVocabs();
 
-            // Phục hồi lại trạng thái các câu hỏi đã chọn trong trang này
             requestAnimationFrame(() => {
                 for (const [qId, optIdx] of Object.entries(savedAnswers)) {
                     const radio = document.querySelector(`input[name="practice_opt_${qId}"][value="${optIdx}"]`);
