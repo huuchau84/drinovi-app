@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lý thuyết lái xe Na Uy - Statens vegvesen</title>
+    <title>Lý thuyết lái xe Na Uy - Học & Thi</title>
     <style>
         :root {
             --primary: #0046ac;
@@ -104,6 +104,34 @@
                 display: block;
             }
 
+        /* Storage Controls */
+        .storage-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--primary-light);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #cddc39;
+        }
+
+            .storage-controls label {
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .storage-controls select {
+                padding: 6px 10px;
+                border-radius: 6px;
+                border: 1px solid var(--border);
+            }
+
         /* Quiz styling */
         .card {
             background: var(--card-bg);
@@ -113,12 +141,17 @@
             margin-bottom: 20px;
         }
 
+        /* Hiệu ứng màu từ vựng */
         .w {
-            color: #e65100;
+            color: #0d6efd;
             text-decoration: underline dotted;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
         }
+
+            .w.visited {
+                color: #fd7e14;
+            }
 
         .image-container {
             display: flex;
@@ -146,7 +179,7 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 15px;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
         }
 
             .option-item:hover {
@@ -326,6 +359,49 @@
                 margin-bottom: 4px;
             }
 
+        .exam-questions-box {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #0d6efd;
+            border-radius: 4px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .exam-title {
+            font-weight: 700;
+            color: #0d6efd;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+
+        .exam-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+
+            .exam-list li {
+                margin-bottom: 12px;
+                padding-bottom: 12px;
+                border-bottom: 1px dashed #dee2e6;
+            }
+
+                .exam-list li:last-child {
+                    margin-bottom: 0;
+                    padding-bottom: 0;
+                    border-bottom: none;
+                }
+
+            .exam-list .answer {
+                color: #198754;
+                display: inline-block;
+                margin-top: 4px;
+            }
+
         /* Modal Từ vựng */
         .vocab-modal-backdrop {
             position: fixed;
@@ -367,50 +443,12 @@
                 border-radius: 6px;
                 cursor: pointer;
             }
-
-        /* Phân trang (Pagination) */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 10px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .page-btn {
-            padding: 8px 14px;
-            border: 1px solid var(--border);
-            background: var(--card-bg);
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-muted);
-            transition: all 0.2s;
-        }
-
-            .page-btn:hover:not(:disabled) {
-                background: #f1f3f4;
-                color: var(--primary);
-            }
-
-            .page-btn.active {
-                background: var(--primary);
-                color: white;
-                border-color: var(--primary);
-            }
-
-            .page-btn:disabled {
-                opacity: 0.4;
-                cursor: not-allowed;
-            }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Header chứa bộ đổi ngôn ngữ -->
+        <!-- Header -->
         <div class="header-bar">
             <h2>Thi Bằng Lái Xe Na Uy</h2>
             <div class="lang-switch">
@@ -421,15 +459,32 @@
             </div>
         </div>
 
-        <!-- Menu 3 Tabs -->
+        <!-- Menu Tabs -->
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('practice')">Ôn tập 500 câu</button>
+            <button class="tab-btn active" onclick="switchTab('practice')">Ôn tập lý thuyết</button>
             <button class="tab-btn" onclick="switchTab('mock-exam')">Thi thử (45 câu)</button>
             <button class="tab-btn" onclick="switchTab('signs')">Thư viện biển báo</button>
         </div>
 
         <!-- TAB 1: ÔN TẬP -->
         <div id="tab-practice" class="tab-content active">
+
+            <!-- Khu vực điều khiển Cache -->
+            <div class="storage-controls">
+                <div style="display: flex; gap: 20px; align-items: center;">
+                    <label>
+                        <input type="checkbox" id="saveProgressCb" onchange="toggleSaveProgress()"> 💾 Lưu tiến độ học
+                    </label>
+                    <select id="cacheDuration" onchange="updateCacheDuration()">
+                        <option value="1">Lưu 1 giờ</option>
+                        <option value="24">Lưu 1 ngày</option>
+                        <option value="168">Lưu 1 tuần</option>
+                        <option value="720" selected>Lưu 1 tháng</option>
+                    </select>
+                </div>
+                <button class="btn-action" style="background: var(--danger); padding: 8px 16px; font-size: 14px;" onclick="clearHistory()">🔄 Xóa lịch sử & Học lại</button>
+            </div>
+
             <div id="practice-container"></div>
         </div>
 
@@ -450,14 +505,17 @@
         <!-- TAB 3: THƯ VIỆN BIỂN BÁO -->
         <div id="tab-signs" class="tab-content">
             <div class="signs-header">
-                <input type="text" id="sign-search" class="search-input" placeholder="Tìm kiếm mã số (202, 334), tên tiếng Na Uy, Anh, Việt..." oninput="filterSigns()">
+                <input type="text" id="sign-search" class="search-input" placeholder="Tìm kiếm mã số, tên tiếng Na Uy, Anh, Việt..." oninput="filterSigns()">
                 <div class="filter-pills">
                     <button class="pill active" onclick="setSignCategory('all', this)">Tất cả</button>
-                    <button class="pill" onclick="setSignCategory('vikeplikt', this)">Ưu tiên & Nhường đường</button>
-                    <button class="pill" onclick="setSignCategory('forbud', this)">Biển cấm</button>
                     <button class="pill" onclick="setSignCategory('fare', this)">Cảnh báo nguy hiểm</button>
-                    <button class="pill" onclick="setSignCategory('opplysning', this)">Biển chỉ dẫn</button>
-                    <button class="pill" onclick="setSignCategory('underskilt', this)">Biển phụ</button>
+                    <button class="pill" onclick="setSignCategory('priority', this)">Ưu tiên & Nhường đường</button>
+                    <button class="pill" onclick="setSignCategory('prohibition', this)">Biển cấm</button>
+                    <button class="pill" onclick="setSignCategory('mandatory', this)">Biển hiệu lệnh</button>
+                    <button class="pill" onclick="setSignCategory('information', this)">Biển chỉ dẫn</button>
+                    <button class="pill" onclick="setSignCategory('service', this)">Biển dịch vụ</button>
+                    <button class="pill" onclick="setSignCategory('supplementary', this)">Biển phụ</button>
+                    <button class="pill" onclick="setSignCategory('marker', this)">Thiết bị an toàn</button>
                 </div>
             </div>
             <div id="signs-grid" class="signs-grid"></div>
@@ -479,21 +537,90 @@
     <script src="signsData.js"></script>
 
     <script>
-        // State quản lý ngôn ngữ (mặc định tiếng Anh)
+        // ==========================================
+        // KHAI BÁO BIẾN TOÀN CỤC & CACHE
+        // ==========================================
         let currentLang = 'en';
+        let clickedVocabs = new Set();
+        let savedAnswers = {}; // Lưu dưới dạng: { questionId: selectedIndex }
+        let isSavingEnabled = false;
 
-        // Đổi ngôn ngữ
+        // Quản lý ngôn ngữ
         function changeLanguage() {
             currentLang = document.getElementById('langSelect').value;
-            // Tráo đổi dữ liệu đang hiển thị (render lại với tham số force = true)
             renderPracticeQuestions(true);
             if (document.getElementById('exam-submit-area').style.display === 'block') {
-                renderExamQuestions(); // Cập nhật ngôn ngữ nếu đang làm bài thi dở
+                renderExamQuestions();
             }
         }
 
-        // Modal logic
+        // ==========================================
+        // LOGIC LƯU TRỮ (LOCAL STORAGE)
+        // ==========================================
+        function loadDataFromLocal() {
+            const savedToggle = localStorage.getItem('isSavingEnabled') === 'true';
+            document.getElementById('saveProgressCb').checked = savedToggle;
+            isSavingEnabled = savedToggle;
+
+            const savedDuration = localStorage.getItem('cacheDuration');
+            if (savedDuration) document.getElementById('cacheDuration').value = savedDuration;
+
+            if (isSavingEnabled) {
+                const cacheStr = localStorage.getItem('drivingAppCache');
+                if (cacheStr) {
+                    const data = JSON.parse(cacheStr);
+                    if (Date.now() > data.expire) {
+                        clearHistory(false);
+                    } else {
+                        savedAnswers = data.answers || {};
+                        clickedVocabs = new Set(data.vocabs || []);
+                    }
+                }
+            }
+        }
+
+        function saveDataToLocal() {
+            if (!isSavingEnabled) return;
+            const hours = parseInt(document.getElementById('cacheDuration').value);
+            const expireTime = Date.now() + (hours * 60 * 60 * 1000);
+
+            const data = {
+                answers: savedAnswers,
+                vocabs: Array.from(clickedVocabs),
+                expire: expireTime
+            };
+            localStorage.setItem('drivingAppCache', JSON.stringify(data));
+            localStorage.setItem('cacheDuration', hours);
+        }
+
+        function toggleSaveProgress() {
+            isSavingEnabled = document.getElementById('saveProgressCb').checked;
+            localStorage.setItem('isSavingEnabled', isSavingEnabled);
+            if (isSavingEnabled) {
+                saveDataToLocal();
+            }
+        }
+
+        function updateCacheDuration() {
+            if (isSavingEnabled) saveDataToLocal();
+        }
+
+        function clearHistory(showAlert = true) {
+            localStorage.removeItem('drivingAppCache');
+            savedAnswers = {};
+            clickedVocabs.clear();
+            if (showAlert) alert('Đã xóa lịch sử học tập thành công!');
+            renderPracticeQuestions(true);
+        }
+
+        // ==========================================
+        // TỪ VỰNG (MODAL)
+        // ==========================================
         function showModal(vocabId) {
+            clickedVocabs.add(vocabId);
+            document.querySelectorAll(`span[onclick="showModal('${vocabId}')"]`).forEach(el => { el.classList.add('visited'); });
+            saveDataToLocal();
+
             let found = null;
             for (const q of questionsData) {
                 if (q.vocabs) {
@@ -507,17 +634,11 @@
                 document.getElementById('vocabModal').style.display = 'flex';
             }
         }
+        function closeModal() { document.getElementById('vocabModal').style.display = 'none'; }
 
-        function closeModal() {
-            document.getElementById('vocabModal').style.display = 'none';
-        }
-
-        function stripHtml(html) {
-            const div = document.createElement("div");
-            div.innerHTML = html;
-            return div.textContent.replace(/\s+/g, ' ').trim();
-        }
-
+        // ==========================================
+        // ĐIỀU HƯỚNG TABS
+        // ==========================================
         function switchTab(targetTab) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -535,100 +656,118 @@
             }
         }
 
-        // --- CÁC BIẾN QUẢN LÝ PHÂN TRANG ÔN TẬP ---
-        let currentPracticePage = 1;
-        const questionsPerPage = 50;
-
-        // Đổi trang khi click
-        function changePracticePage(page) {
-            currentPracticePage = page;
-            renderPracticeQuestions(true);
-            // Tự động cuộn mượt mà lên đầu trang khi chuyển trang
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // TAB 1: RENDER ÔN TẬP SONG NGỮ (CÓ PHÂN TRANG)
+        // ==========================================
+        // TAB 1: RENDER ÔN TẬP (Có bảo vệ Array.isArray)
+        // ==========================================
         function renderPracticeQuestions(force = false) {
             const container = document.getElementById('practice-container');
-
-            // Tránh render lại nếu không cần thiết
             if (!force && container.children.length > 0) return;
 
-            // Tính toán số trang
-            const totalQuestions = questionsData.length;
-            const totalPages = Math.ceil(totalQuestions / questionsPerPage);
-
-            // Đảm bảo trang hiện tại nằm trong giới hạn hợp lệ
-            if (currentPracticePage < 1) currentPracticePage = 1;
-            if (currentPracticePage > totalPages) currentPracticePage = totalPages;
-
-            // Lấy ra 50 câu hỏi của trang hiện tại (dùng slice)
-            const startIndex = (currentPracticePage - 1) * questionsPerPage;
-            const endIndex = startIndex + questionsPerPage;
-            const currentQuestions = questionsData.slice(startIndex, endIndex);
-
-            // 1. Dựng HTML cho danh sách câu hỏi
-            let htmlStr = currentQuestions.map((q) => {
-                //const qHtml = currentLang === 'no' && q.questionHtml_no ? q.questionHtml_no : (q.questionHtml_en || q.questionHtml);
-                // Lấy đúng nội dung câu hỏi theo ngôn ngữ đang chọn (currentLang)
-                const qHtml = (q.question && q.question[currentLang]) ? q.question[currentLang] : (q.question && q.question.en ? q.question.en : '');
-               // const opts = currentLang === 'no' && q.options_no ? q.options_no : (q.options_en || q.options);
-
-                // Lấy đúng danh sách mảng đáp án theo ngôn ngữ đang chọn
+            container.innerHTML = questionsData.map((q) => {
+                const qhtml = (q.question && q.question[currentLang]) ? q.question[currentLang] : (q.question && q.question.en ? q.question.en : '');
+                const qViet = (q.question && q.question.vi) ? q.question.vi : '';
                 const opts = (q.options && q.options[currentLang]) ? q.options[currentLang] : (q.options && q.options.en ? q.options.en : []);
+                const optsViet = (q.options && q.options.vi) ? q.options.vi : [];
 
                 return `
-                              <div class="card" id="practice-q-${q.id}">
-                                <h3>Câu ${q.id}:</h3>
-                                <div style="font-size: 16px; margin: 12px 0;">${qHtml}</div>
-                                ${q.imageHtml ? `<div class="image-container">${q.imageHtml}</div>` : ''}
-                                  <div class="options-list">
-                                    ${Array.isArray(opts) ? opts.map((opt, optIdx) => `
-                                        <label class="option-item">
-                                            <input type="radio" name="practice_opt_${q.id}" value="${optIdx}">
-                                            <div class="option-text">${opt}</div>
-                                        </label>
-                                    `).join('') : ''}
+                          <div class="card" id="practice-q-${q.id}">
+                            <h3>Câu ${q.id}:</h3>
+                            <div style="font-size: 16.5px; margin: 12px 0; font-weight: bold;">${qhtml}</div>
+
+                            <div class="vi-text-practice-${q.id}" style="display: none; font-size: 15px; margin: 8px 0 16px 0; color: var(--text-muted);"><i>${qViet}</i></div>
+
+                            ${q.imageHtml ? `<div class="image-container">${q.imageHtml}</div>` : ''}
+
+                            <div class="options-list">
+                              ${Array.isArray(opts) ? opts.map((opt, optIdx) => `
+                                <label class="option-item" id="practice-label-${q.id}-${optIdx}">
+                                  <input type="radio" name="practice_opt_${q.id}" value="${optIdx}">
+                                  <div class="option-text">
+                                      <div style="font-weight: 500;">${opt}</div>
+                                      <div class="vi-text-practice-${q.id}" style="display: none; font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">${optsViet[optIdx] || ''}</div>
                                   </div>
-                                <button class="btn-action" onclick="checkPracticeAnswer(${q.id})">Kiểm tra đáp án</button>
-                                <div id="practice-exp-${q.id}" style="display: none;" class="explanation-box">
-                                  ${q.explanationHtml}
-                                </div>
-                              </div>
-                            `;
+                                </label>
+                              `).join('') : ''}
+                            </div>
+
+                            <button class="btn-action" onclick="checkPracticeAnswer(${q.id}, false)">Kiểm tra đáp án</button>
+                            <div id="practice-exp-${q.id}" style="display: none;" class="explanation-box">
+                              ${q.explanationHtml}
+                            </div>
+                          </div>
+                        `;
             }).join('');
 
-            // 2. Dựng HTML cho thanh Phân trang (Pagination)
-            let paginationHtml = '<div class="pagination">';
+            restoreClickedVocabs();
 
-            // Nút "Trước"
-            paginationHtml += `<button class="page-btn" ${currentPracticePage === 1 ? 'disabled' : ''} onclick="changePracticePage(${currentPracticePage - 1})">« Trước</button>`;
-
-            // Render các nút số trang (1, 2, 3... 10)
-            for (let i = 1; i <= totalPages; i++) {
-                paginationHtml += `<button class="page-btn ${i === currentPracticePage ? 'active' : ''}" onclick="changePracticePage(${i})">${i}</button>`;
-            }
-
-            // Nút "Sau"
-            paginationHtml += `<button class="page-btn" ${currentPracticePage === totalPages ? 'disabled' : ''} onclick="changePracticePage(${currentPracticePage + 1})">Sau »</button>`;
-
-            paginationHtml += '</div>';
-
-            // Gộp cả danh sách câu hỏi và thanh phân trang đổ ra màn hình
-            container.innerHTML = htmlStr + paginationHtml;
+            requestAnimationFrame(() => {
+                for (const [qId, optIdx] of Object.entries(savedAnswers)) {
+                    const radio = document.querySelector(`input[name="practice_opt_${qId}"][value="${optIdx}"]`);
+                    if (radio) {
+                        radio.checked = true;
+                        checkPracticeAnswer(parseInt(qId), true);
+                    }
+                }
+            });
         }
 
-        function checkPracticeAnswer(qId) {
-            const selected = document.querySelector(`input[name="practice_opt_${qId}"]:checked`);
-            const expBox = document.getElementById(`practice-exp-${qId}`);
+        // ==========================================
+        // HÀM KIỂM TRA ĐÁP ÁN
+        // ==========================================
+        function checkPracticeAnswer(qId, isRestoring = false) {
+            const numericQId = parseInt(qId);
+            const selected = document.querySelector(`input[name="practice_opt_${numericQId}"]:checked`);
+            const expBox = document.getElementById(`practice-exp-${numericQId}`);
+
             if (!selected) {
-                alert("Vui lòng chọn một đáp án!");
+                if (!isRestoring) alert("Vui lòng chọn một đáp án!");
                 return;
             }
-            expBox.style.display = "block";
+
+            const questionData = questionsData.find(q => q.id === numericQId);
+            if (!questionData) return;
+
+            const correctIdx = questionData.correctAnswerIndex;
+            const selectedIdx = parseInt(selected.value);
+
+            document.querySelectorAll(`.vi-text-practice-${numericQId}`).forEach(el => el.style.display = 'block');
+
+            document.querySelectorAll(`input[name="practice_opt_${numericQId}"]`).forEach(input => {
+                const label = document.getElementById(`practice-label-${numericQId}-${input.value}`);
+                if (label) {
+                    label.style.borderColor = "var(--border)";
+                    label.style.backgroundColor = "transparent";
+                }
+            });
+
+            const selectedLabel = document.getElementById(`practice-label-${numericQId}-${selectedIdx}`);
+            const correctLabel = document.getElementById(`practice-label-${numericQId}-${correctIdx}`);
+
+            if (selectedLabel) {
+                if (selectedIdx === correctIdx) {
+                    selectedLabel.style.borderColor = "var(--success)";
+                    selectedLabel.style.backgroundColor = "#e6f4ea";
+                } else {
+                    selectedLabel.style.borderColor = "var(--danger)";
+                    selectedLabel.style.backgroundColor = "#fce8e6";
+                    if (correctLabel) {
+                        correctLabel.style.borderColor = "var(--success)";
+                        correctLabel.style.backgroundColor = "#e6f4ea";
+                    }
+                }
+            }
+
+            if (expBox) expBox.style.display = "block";
+
+            if (!isRestoring && isSavingEnabled) {
+                savedAnswers[numericQId] = selectedIdx;
+                saveDataToLocal();
+            }
         }
 
-        // TAB 2: RENDER THI THỬ SONG NGỮ
+        // ==========================================
+        // TAB 2: RENDER THI THỬ
+        // ==========================================
         let examTimerInterval = null;
         let examTimeRemaining = 90 * 60;
         let currentExamQuestions = [];
@@ -638,6 +777,7 @@
             const shuffled = [...questionsData].sort(() => 0.5 - Math.random());
             currentExamQuestions = shuffled.slice(0, 45);
             examTimeRemaining = 90 * 60;
+
             document.getElementById('btn-start-exam').style.display = 'none';
             document.getElementById('exam-submit-area').style.display = 'block';
             document.getElementById('exam-result').innerHTML = '';
@@ -660,21 +800,30 @@
         function renderExamQuestions() {
             const container = document.getElementById('exam-questions-container');
             container.innerHTML = currentExamQuestions.map((q, idx) => {
-                const qHtml = currentLang === 'no' && q.questionHtml_no ? q.questionHtml_no : (q.questionHtml_en || q.questionHtml);
-                const opts = currentLang === 'no' && q.options_no ? q.options_no : (q.options_en || q.options);
+                const qhtml = (q.question && q.question[currentLang]) ? q.question[currentLang] : (q.question && q.question.en ? q.question.en : '');
+                const qViet = (q.question && q.question.vi) ? q.question.vi : '';
+                const opts = (q.options && q.options[currentLang]) ? q.options[currentLang] : (q.options && q.options.en ? q.options.en : []);
+                const optsViet = (q.options && q.options.vi) ? q.options.vi : [];
 
                 return `
                           <div class="card" id="exam-q-${q.id}">
-                            <h3>Câu ${idx + 1}/45 (ID: ${q.id}):</h3>
-                            <div style="font-size: 16px; margin: 12px 0;">${qHtml}</div>
+                            <h3>Câu ${idx + 1}/45:</h3>
+                            <div style="font-size: 16.5px; margin: 12px 0; font-weight: bold;">${qhtml}</div>
+
+                            <div class="vi-text-exam" style="display: none; font-size: 15px; margin: 8px 0 16px 0; color: var(--text-muted);"><i>${qViet}</i></div>
+
                             ${q.imageHtml ? `<div class="image-container">${q.imageHtml}</div>` : ''}
+
                             <div class="options-list">
-                              ${opts.map((opt, optIdx) => `
-                                <label class="option-item">
+                              ${Array.isArray(opts) ? opts.map((opt, optIdx) => `
+                                <label class="option-item" id="exam-label-${q.id}-${optIdx}">
                                   <input type="radio" name="exam_opt_${q.id}" value="${optIdx}">
-                                  <div class="option-text">${opt}</div>
+                                  <div class="option-text">
+                                      <div style="font-weight: 500;">${opt}</div>
+                                      <div class="vi-text-exam" style="display: none; font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">${optsViet[optIdx] || ''}</div>
+                                  </div>
                                 </label>
-                              `).join('')}
+                              `).join('') : ''}
                             </div>
                             <div id="exam-exp-${q.id}" style="display: none;" class="explanation-box">
                               ${q.explanationHtml}
@@ -682,28 +831,43 @@
                           </div>
                         `;
             }).join('');
+            restoreClickedVocabs();
         }
 
         function submitMockExam() {
             clearInterval(examTimerInterval);
             let score = 0;
 
+            document.querySelectorAll('.vi-text-exam').forEach(el => el.style.display = 'block');
+
             currentExamQuestions.forEach(q => {
                 const selected = document.querySelector(`input[name="exam_opt_${q.id}"]:checked`);
                 const expBox = document.getElementById(`exam-exp-${q.id}`);
-                expBox.style.display = "block";
+                const correctIdx = q.correctAnswerIndex;
 
-                // Lấy đúng ngôn ngữ để so khớp chuỗi Text
-                const correctStr = currentLang === 'no' && q.correctAnswer_no ? q.correctAnswer_no : (q.correctAnswer_en || q.correctAnswer);
-                const correctClean = stripHtml(correctStr).toLowerCase();
+                expBox.style.display = "block";
+                document.querySelectorAll(`input[name="exam_opt_${q.id}"]`).forEach(inp => inp.disabled = true);
 
                 if (selected) {
                     const selectedIdx = parseInt(selected.value, 10);
-                    const opts = currentLang === 'no' && q.options_no ? q.options_no : (q.options_en || q.options);
-                    const chosenClean = stripHtml(opts[selectedIdx]).toLowerCase();
-
-                    if (chosenClean === correctClean) {
+                    if (selectedIdx === correctIdx) {
                         score++;
+                        selected.parentElement.style.borderColor = "var(--success)";
+                        selected.parentElement.style.backgroundColor = "#e6f4ea";
+                    } else {
+                        selected.parentElement.style.borderColor = "var(--danger)";
+                        selected.parentElement.style.backgroundColor = "#fce8e6";
+                        const correctLabel = document.getElementById(`exam-label-${q.id}-${correctIdx}`);
+                        if (correctLabel) {
+                            correctLabel.style.borderColor = "var(--success)";
+                            correctLabel.style.backgroundColor = "#e6f4ea";
+                        }
+                    }
+                } else {
+                    const correctLabel = document.getElementById(`exam-label-${q.id}-${correctIdx}`);
+                    if (correctLabel) {
+                        correctLabel.style.borderColor = "var(--success)";
+                        correctLabel.style.backgroundColor = "#e6f4ea";
                     }
                 }
             });
@@ -722,7 +886,17 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // TAB 3: THƯ VIỆN BIỂN BÁO
+        // ==========================================
+        // CÁC HÀM TIỆN ÍCH CHUNG
+        // ==========================================
+        function restoreClickedVocabs() {
+            clickedVocabs.forEach(vocabId => {
+                document.querySelectorAll(`span[onclick="showModal('${vocabId}')"]`).forEach(el => {
+                    el.classList.add('visited');
+                });
+            });
+        }
+
         let currentCategory = 'all';
         function setSignCategory(cat, btn) {
             currentCategory = cat;
@@ -735,7 +909,10 @@
             const keyword = document.getElementById('sign-search').value.toLowerCase().trim();
             const filtered = signsData.filter(s => {
                 const matchesCategory = (currentCategory === 'all') || (s.category === currentCategory);
-                const matchesKeyword = s.code.toLowerCase().includes(keyword) || s.norwegianName.toLowerCase().includes(keyword) || s.englishName.toLowerCase().includes(keyword) || s.vietnameseName.toLowerCase().includes(keyword);
+                const matchesKeyword = s.code.toLowerCase().includes(keyword) ||
+                    s.norwegianName.toLowerCase().includes(keyword) ||
+                    s.englishName.toLowerCase().includes(keyword) ||
+                    s.vietnameseName.toLowerCase().includes(keyword);
                 return matchesCategory && matchesKeyword;
             });
             renderSigns(filtered);
@@ -747,24 +924,42 @@
                 container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px 0;">Không tìm thấy biển báo.</p>`;
                 return;
             }
+
             container.innerHTML = items.map(sign => `
-                        <div class="sign-card">
-                          <div class="sign-svg-wrapper">
+                    <div class="sign-card">
+                        <div class="sign-svg-wrapper">
                             <img src="${sign.imageSrc}" alt="${sign.norwegianName}" style="max-height: 85px; max-width: 100px; width: auto; height: auto;">
-                          </div>
-                          <span class="sign-code">${sign.code}</span>
-                          <div class="sign-name-no">${sign.norwegianName}</div>
-                          <div class="sign-name-vi">${sign.vietnameseName}</div>
-                          <div class="sign-name-en">${sign.englishName}</div>
-                          <ul class="sign-rules">
-                            ${sign.keyRulesVi.map(rule => `<li>${rule}</li>`).join('')}
-                          </ul>
                         </div>
-                      `).join('');
+                        <span class="sign-code">${sign.code}</span>
+                        <div class="sign-name-no">${sign.norwegianName}</div>
+                        <div class="sign-name-vi">${sign.vietnameseName}</div>
+                        <div class="sign-name-en">${sign.englishName}</div>
+                        <ul class="sign-rules">
+                            ${sign.keyRulesVi.map(rule => `<li>${rule}</li>`).join('')}
+                        </ul>
+                        ${(sign.testQuestions && sign.testQuestions.length > 0) ? `
+                            <div class="exam-questions-box">
+                                <div class="exam-title">📝 Câu hỏi thi thực tế hay gặp:</div>
+                                <ul class="exam-list">
+                                    ${sign.testQuestions.map(q => {
+                let formattedQ = q.replace("Đề thi:", "<strong>Hỏi:</strong>")
+                    .replace("-> Đáp án:", "<br><span class='answer'><strong>💡 Đáp án:</strong>");
+                return `<li>${formattedQ}</span></li>`;
+            }).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                    </div>
+                    `).join('');
         }
 
+        // ==========================================
+        // KHỞI CHẠY KHI TRANG LOAD
+        // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
-            renderPracticeQuestions();
+            loadDataFromLocal();         // 1. Tải Cache nếu có
+            renderSigns();               // 2. Render Biển báo
+            renderPracticeQuestions();   // 3. Render Lý thuyết (và phục hồi lịch sử)
         });
     </script>
 </body>
