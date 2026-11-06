@@ -569,8 +569,13 @@
 
             // 1. Dựng HTML cho danh sách câu hỏi
             let htmlStr = currentQuestions.map((q) => {
-                const qHtml = currentLang === 'no' && q.questionHtml_no ? q.questionHtml_no : (q.questionHtml_en || q.questionHtml);
-                const opts = currentLang === 'no' && q.options_no ? q.options_no : (q.options_en || q.options);
+                //const qHtml = currentLang === 'no' && q.questionHtml_no ? q.questionHtml_no : (q.questionHtml_en || q.questionHtml);
+                // Lấy đúng nội dung câu hỏi theo ngôn ngữ đang chọn (currentLang)
+                const qHtml = (q.question && q.question[currentLang]) ? q.question[currentLang] : (q.question && q.question.en ? q.question.en : '');
+               // const opts = currentLang === 'no' && q.options_no ? q.options_no : (q.options_en || q.options);
+
+                // Lấy đúng danh sách mảng đáp án theo ngôn ngữ đang chọn
+                const opts = (q.options && q.options[currentLang]) ? q.options[currentLang] : (q.options && q.options.en ? q.options.en : []);
 
                 return `
                               <div class="card" id="practice-q-${q.id}">
