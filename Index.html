@@ -48,6 +48,8 @@
             .header-bar h2 {
                 font-size: 20px;
                 color: var(--primary);
+                cursor: pointer;
+                user-select: none;
             }
 
         .lang-switch select {
@@ -132,6 +134,43 @@
                 padding: 6px 10px;
                 border-radius: 6px;
                 border: 1px solid var(--border);
+            }
+
+        /* Pagination Bar */
+        .pagination-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            background: var(--card-bg);
+            padding: 12px;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .page-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .page-btn:hover {
+                border-color: var(--primary);
+                background: var(--primary-light);
+            }
+
+            .page-btn.active {
+                background: var(--primary);
+                color: #fff;
+                border-color: var(--primary);
             }
 
         /* Stats Grid Dashboard */
@@ -481,7 +520,7 @@
     <div class="container">
         <!-- Header -->
         <div class="header-bar">
-            <h2>Thi Bằng Lái Xe Na Uy</h2>
+            <h2 onclick="handleSecretClick()" title="Bấm 3 lần liên tiếp để mở thống kê">Thi Bằng Lái Xe Na Uy</h2>
             <div class="lang-switch">
                 <select id="langSelect" onchange="changeLanguage()">
                     <option value="en">🇬🇧 Ngôn ngữ: Tiếng Anh</option>
@@ -490,11 +529,12 @@
             </div>
         </div>
 
-        <!-- Menu Tabs: Đã có đủ 4 tab cho người học -->
+        <!-- Menu Tabs -->
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="switchTab('practice')">Ôn tập lý thuyết</button>
             <button class="tab-btn" onclick="switchTab('mock-exam')">Thi thử (45 câu)</button>
             <button class="tab-btn" onclick="switchTab('signs')">Thư viện biển báo</button>
+            <!-- Nút thống kê công khai (khách xem được) -->
             <button class="tab-btn" onclick="switchTab('stats')">📊 Thống kê</button>
         </div>
 
@@ -515,7 +555,14 @@
                 <button class="btn-action" style="background: var(--danger); padding: 8px 16px; font-size: 14px;" onclick="clearHistory()">🔄 Xóa lịch sử & Học lại</button>
             </div>
 
+            <!-- Thanh phân trang trên -->
+            <div id="pagination-top" class="pagination-bar"></div>
+
+            <!-- Nơi chứa nội dung câu hỏi hiện tại -->
             <div id="practice-container"></div>
+
+            <!-- Thanh phân trang dưới -->
+            <div id="pagination-bottom" class="pagination-bar"></div>
         </div>
 
         <!-- TAB 2: THI THỬ -->
@@ -609,10 +656,28 @@
         let totalExamsPassed = 0;
         let visitCount = 0;
 
+        // Biến phân trang (66 câu/trang)
+        const ITEMS_PER_PAGE = 66;
+        let currentPage = 1;
+
+        // Lối tắt bí mật mở thống kê
+        let secretClickCount = 0;
+        let secretClickTimer = null;
+        function handleSecretClick() {
+            secretClickCount++;
+            if (secretClickTimer) clearTimeout(secretClickTimer);
+            if (secretClickCount >= 3) {
+                secretClickCount = 0;
+                switchTab('stats');
+            } else {
+                secretClickTimer = setTimeout(() => { secretClickCount = 0; }, 600);
+            }
+        }
+
         // Quản lý ngôn ngữ
         function changeLanguage() {
             currentLang = document.getElementById('langSelect').value;
-            renderPracticeQuestions(true);
+            renderPracticeQuestions();
             if (document.getElementById('exam-submit-area').style.display === 'block') {
                 renderExamQuestions();
             }
@@ -659,6 +724,10 @@
                     }
                 }
             }
+
+            if (window.location.hash === '#stats') {
+                switchTab('stats');
+            }
         }
 
         function saveDataToLocal() {
@@ -698,7 +767,7 @@
             totalExamsTaken = 0;
             totalExamsPassed = 0;
             if (showAlert) alert('Đã xóa lịch sử học tập thành công!');
-            renderPracticeQuestions(true);
+            renderPracticeQuestions();
         }
 
         // ==========================================
@@ -718,7 +787,7 @@
                 adviceEl.innerText = "Bạn chưa bắt đầu ôn tập. Hãy chuyển sang tab 'Ôn tập lý thuyết' để làm các câu hỏi đầu tiên nhé!";
             } else {
                 const percent = Math.round((answeredCount / (totalQuestions || 1)) * 100);
-                adviceEl.innerText = `Bạn đã hoàn thành ${percent}% lượng câu hỏi ôn tập (${answeredCount}/${totalQuestions} câu), tham gia thi thử ${totalExamsTaken} lần và đạt yêu cầu ${totalExamsPassed} lần. Hãy tiếp tục cố gắng để đạt kết quả tốt nhất trong kỳ thi thực tế tại Na Uy nhé!`;
+                adviceEl.innerText = `Bạn đã hoàn thành ${percent}% lượng câu hỏi ôn tập (${answeredCount}/${totalQuestions} câu), tham gia thi thử ${totalExamsTaken} lần và đạt yêu cầu ${totalExamsPassed} lần. Hãy tiếp tục cố gắng nhé!`;
             }
         }
 
@@ -771,13 +840,63 @@
         }
 
         // ==========================================
-        // TAB 1: RENDER ÔN TẬP
+        // TAB 1: RENDER ÔN TẬP CÓ PHÂN TRANG (66 câu/trang, tối ưu render)
         // ==========================================
-        function renderPracticeQuestions(force = false) {
-            const container = document.getElementById('practice-container');
-            if (!force && container.children.length > 0) return;
+        function changePage(page) {
+            currentPage = page;
+            renderPracticeQuestions();
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Tự động cuộn lên đầu khi chuyển trang
+        }
 
-            container.innerHTML = questionsData.map((q) => {
+        function renderPaginationControls(totalPages) {
+            let html = '';
+            // Nút Về trang đầu và Trước
+            if (currentPage > 1) {
+                html += `<button class="page-btn" onclick="changePage(1)">« Đầu</button>`;
+                html += `<button class="page-btn" onclick="changePage(${currentPage - 1})">‹ Trước</button>`;
+            }
+
+            // Hiển thị tối đa các trang xung quanh trang hiện tại (3 trang trước, 3 trang sau)
+            let startPage = Math.max(1, currentPage - 3);
+            let endPage = Math.min(totalPages, currentPage + 3);
+
+            for (let i = startPage; i <= endPage; i++) {
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Nút Tới trang sau và Cuối
+            if (currentPage < totalPages) {
+                html += `<button class="page-btn" onclick="changePage(${currentPage + 1})">Sau ›</button>`;
+                html += `<button class="page-btn" onclick="changePage(${totalPages})">Cuối »</button>`;
+            }
+
+            return html;
+        }
+
+        function renderPracticeQuestions() {
+            const container = document.getElementById('practice-container');
+            const totalQuestions = typeof questionsData !== 'undefined' ? questionsData.length : 0;
+            if (totalQuestions === 0) return;
+
+            const totalPages = Math.ceil(totalQuestions / ITEMS_PER_PAGE);
+
+            // Bảo vệ an toàn cho biến trang
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+
+            // Chỉ trích xuất và render 66 câu hỏi của trang hiện tại
+            const currentQuestions = questionsData.slice(startIndex, endIndex);
+
+            // Cập nhật thanh điều hướng
+            const paginationHTML = renderPaginationControls(totalPages);
+            document.getElementById('pagination-top').innerHTML = paginationHTML;
+            document.getElementById('pagination-bottom').innerHTML = paginationHTML;
+
+            // Xây dựng mã HTML cực nhanh chỉ cho 66 câu
+            container.innerHTML = currentQuestions.map((q) => {
                 const qhtml = (q.question && q.question[currentLang]) ? q.question[currentLang] : (q.question && q.question.en ? q.question.en : '');
                 const qViet = (q.question && q.question.vi) ? q.question.vi : '';
                 const opts = (q.options && q.options[currentLang]) ? q.options[currentLang] : (q.options && q.options.en ? q.options.en : []);
@@ -814,6 +933,7 @@
 
             restoreClickedVocabs();
 
+            // Phục hồi lại trạng thái các câu hỏi đã chọn trong trang này
             requestAnimationFrame(() => {
                 for (const [qId, optIdx] of Object.entries(savedAnswers)) {
                     const radio = document.querySelector(`input[name="practice_opt_${qId}"][value="${optIdx}"]`);
