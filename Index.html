@@ -573,24 +573,24 @@
                 const opts = currentLang === 'no' && q.options_no ? q.options_no : (q.options_en || q.options);
 
                 return `
-                      <div class="card" id="practice-q-${q.id}">
-                        <h3>Câu ${q.id}:</h3>
-                        <div style="font-size: 16px; margin: 12px 0;">${qHtml}</div>
-                        ${q.imageHtml ? `<div class="image-container">${q.imageHtml}</div>` : ''}
-                        <div class="options-list">
-                          ${opts.map((opt, optIdx) => `
-                            <label class="option-item">
-                              <input type="radio" name="practice_opt_${q.id}" value="${optIdx}">
-                              <div class="option-text">${opt}</div>
-                            </label>
-                          `).join('')}
-                        </div>
-                        <button class="btn-action" onclick="checkPracticeAnswer(${q.id})">Kiểm tra đáp án</button>
-                        <div id="practice-exp-${q.id}" style="display: none;" class="explanation-box">
-                          ${q.explanationHtml}
-                        </div>
-                      </div>
-                    `;
+                              <div class="card" id="practice-q-${q.id}">
+                                <h3>Câu ${q.id}:</h3>
+                                <div style="font-size: 16px; margin: 12px 0;">${qHtml}</div>
+                                ${q.imageHtml ? `<div class="image-container">${q.imageHtml}</div>` : ''}
+                                  <div class="options-list">
+                                    ${Array.isArray(opts) ? opts.map((opt, optIdx) => `
+                                        <label class="option-item">
+                                            <input type="radio" name="practice_opt_${q.id}" value="${optIdx}">
+                                            <div class="option-text">${opt}</div>
+                                        </label>
+                                    `).join('') : ''}
+                                  </div>
+                                <button class="btn-action" onclick="checkPracticeAnswer(${q.id})">Kiểm tra đáp án</button>
+                                <div id="practice-exp-${q.id}" style="display: none;" class="explanation-box">
+                                  ${q.explanationHtml}
+                                </div>
+                              </div>
+                            `;
             }).join('');
 
             // 2. Dựng HTML cho thanh Phân trang (Pagination)
@@ -659,23 +659,23 @@
                 const opts = currentLang === 'no' && q.options_no ? q.options_no : (q.options_en || q.options);
 
                 return `
-                  <div class="card" id="exam-q-${q.id}">
-                    <h3>Câu ${idx + 1}/45 (ID: ${q.id}):</h3>
-                    <div style="font-size: 16px; margin: 12px 0;">${qHtml}</div>
-                    ${q.imageHtml ? `<div class="image-container">${q.imageHtml}</div>` : ''}
-                    <div class="options-list">
-                      ${opts.map((opt, optIdx) => `
-                        <label class="option-item">
-                          <input type="radio" name="exam_opt_${q.id}" value="${optIdx}">
-                          <div class="option-text">${opt}</div>
-                        </label>
-                      `).join('')}
-                    </div>
-                    <div id="exam-exp-${q.id}" style="display: none;" class="explanation-box">
-                      ${q.explanationHtml}
-                    </div>
-                  </div>
-                `;
+                          <div class="card" id="exam-q-${q.id}">
+                            <h3>Câu ${idx + 1}/45 (ID: ${q.id}):</h3>
+                            <div style="font-size: 16px; margin: 12px 0;">${qHtml}</div>
+                            ${q.imageHtml ? `<div class="image-container">${q.imageHtml}</div>` : ''}
+                            <div class="options-list">
+                              ${opts.map((opt, optIdx) => `
+                                <label class="option-item">
+                                  <input type="radio" name="exam_opt_${q.id}" value="${optIdx}">
+                                  <div class="option-text">${opt}</div>
+                                </label>
+                              `).join('')}
+                            </div>
+                            <div id="exam-exp-${q.id}" style="display: none;" class="explanation-box">
+                              ${q.explanationHtml}
+                            </div>
+                          </div>
+                        `;
             }).join('');
         }
 
@@ -705,14 +705,14 @@
 
             const isPassed = score >= 38;
             document.getElementById('exam-result').innerHTML = `
-                <div class="exam-result-box" style="border-color: ${isPassed ? 'var(--success)' : 'var(--danger)'}">
-                  <h2 style="color: ${isPassed ? 'var(--success)' : 'var(--danger)'}">
-                    ${isPassed ? 'CHÚC MỪNG: BẠN ĐẠT YÊU CẦU (BESTÅTT)!' : 'RẤT TIẾC: BẠN CHƯA ĐẠT (IKKE BESTÅTT)'}
-                  </h2>
-                  <p style="font-size: 18px; margin: 10px 0;">Kết quả: <strong>${score}/45</strong> câu đúng (Yêu cầu: 38/45)</p>
-                  <button class="btn-action" onclick="startMockExam()">Làm đề thi khác</button>
-                </div>
-              `;
+                        <div class="exam-result-box" style="border-color: ${isPassed ? 'var(--success)' : 'var(--danger)'}">
+                          <h2 style="color: ${isPassed ? 'var(--success)' : 'var(--danger)'}">
+                            ${isPassed ? 'CHÚC MỪNG: BẠN ĐẠT YÊU CẦU (BESTÅTT)!' : 'RẤT TIẾC: BẠN CHƯA ĐẠT (IKKE BESTÅTT)'}
+                          </h2>
+                          <p style="font-size: 18px; margin: 10px 0;">Kết quả: <strong>${score}/45</strong> câu đúng (Yêu cầu: 38/45)</p>
+                          <button class="btn-action" onclick="startMockExam()">Làm đề thi khác</button>
+                        </div>
+                      `;
             document.getElementById('exam-submit-area').style.display = 'none';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -743,19 +743,19 @@
                 return;
             }
             container.innerHTML = items.map(sign => `
-                <div class="sign-card">
-                  <div class="sign-svg-wrapper">
-                    <img src="${sign.imageSrc}" alt="${sign.norwegianName}" style="max-height: 85px; max-width: 100px; width: auto; height: auto;">
-                  </div>
-                  <span class="sign-code">${sign.code}</span>
-                  <div class="sign-name-no">${sign.norwegianName}</div>
-                  <div class="sign-name-vi">${sign.vietnameseName}</div>
-                  <div class="sign-name-en">${sign.englishName}</div>
-                  <ul class="sign-rules">
-                    ${sign.keyRulesVi.map(rule => `<li>${rule}</li>`).join('')}
-                  </ul>
-                </div>
-              `).join('');
+                        <div class="sign-card">
+                          <div class="sign-svg-wrapper">
+                            <img src="${sign.imageSrc}" alt="${sign.norwegianName}" style="max-height: 85px; max-width: 100px; width: auto; height: auto;">
+                          </div>
+                          <span class="sign-code">${sign.code}</span>
+                          <div class="sign-name-no">${sign.norwegianName}</div>
+                          <div class="sign-name-vi">${sign.vietnameseName}</div>
+                          <div class="sign-name-en">${sign.englishName}</div>
+                          <ul class="sign-rules">
+                            ${sign.keyRulesVi.map(rule => `<li>${rule}</li>`).join('')}
+                          </ul>
+                        </div>
+                      `).join('');
         }
 
         document.addEventListener('DOMContentLoaded', () => {
