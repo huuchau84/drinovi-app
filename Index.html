@@ -108,6 +108,38 @@
                 display: block;
             }
 
+        /* Welcome Banner */
+        .welcome-banner {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e6f0fa 100%);
+            border: 1px solid #cce0ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 70, 172, 0.08);
+            position: relative;
+        }
+
+            .welcome-banner h3 {
+                color: var(--primary);
+                margin-bottom: 12px;
+                font-size: 18px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .welcome-banner ul {
+                margin-left: 24px;
+                margin-bottom: 16px;
+                font-size: 15px;
+                color: #2c3e50;
+                line-height: 1.6;
+            }
+
+            .welcome-banner li {
+                margin-bottom: 8px;
+            }
+
         /* Storage Controls */
         .storage-controls {
             display: flex;
@@ -277,6 +309,22 @@
             border-radius: 6px;
             cursor: pointer;
         }
+
+        .btn-outline {
+            background: #fff;
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .btn-outline:hover {
+                background: #f1f3f4;
+            }
 
         .explanation-box {
             margin-top: 16px;
@@ -577,6 +625,20 @@
 
         <!-- TAB 1: ÔN TẬP -->
         <div id="tab-practice" class="tab-content active">
+
+            <!-- BẢNG HƯỚNG DẪN NHANH ĐẦU TRANG -->
+            <div class="welcome-banner" id="welcomeBanner" style="display: none;">
+                <h3>👋 Chào mừng bạn! Ứng dụng này hoàn toàn miễn phí & không cần tạo tài khoản</h3>
+                <ul>
+                    <li><strong>Dịch & Giải thích tự động:</strong> Chọn đáp án và bấm <em>"Kiểm tra đáp án"</em> để xem phần dịch tiếng Việt và giải thích cặn kẽ.</li>
+                    <li><strong>Tra từ vựng trực tiếp:</strong> Bấm vào các từ được <span style="color: #0d6efd; font-weight: 600; text-decoration: underline dotted;">gạch chân xanh</span> để xem nghĩa. Từ đã bấm sẽ chuyển sang <span style="color: #fd7e14; font-weight: 600; text-decoration: underline dotted;">màu cam</span> để bạn nhận biết tiến độ học từ vựng.</li>
+                    <li><strong>Lưu lịch sử an toàn:</strong> Hãy tích chọn ô <em>"💾 Lưu tiến độ học"</em> bên dưới để web ghi nhớ các câu bạn đã làm. Dữ liệu chỉ lưu trên máy của riêng bạn.</li>
+                </ul>
+                <div style="text-align: right;">
+                    <button class="btn-outline" onclick="closeWelcomeBanner()">Đã hiểu & Đóng lại</button>
+                </div>
+            </div>
+
             <div class="storage-controls">
                 <div style="display: flex; gap: 20px; align-items: center;">
                     <label>
@@ -668,13 +730,44 @@
 
                 <p>Thân chào các bạn,</p>
 
-                <p>Trang web này được xây dựng với một mục đích nhỏ bé và giản dị: mong muốn được góp một phần công sức giúp đỡ mọi người có thêm nguồn tài liệu tham khảo, ôn luyện kiến thức trước khi bước vào kỳ thi lý thuyết lái xe tại Na Uy. Đồng thời, qua việc đối chiếu song ngữ, hy vọng đây cũng là một dịp tốt để chúng ta cùng nhau trau dồi và nâng cao vốn từ vựng tiếng Anh cũng như tiếng Na Uy (Norsk).</p>
+                <p>Trang web này được xây dựng với một mục đích nhỏ bé và giản dị: mong muốn được góp một phần công sức giúp đỡ mọi người có thêm nguồn tài liệu tham khảo, <strong>ôn luyện kiến thức trước khi bước vào kỳ thi lý thuyết lái xe tại Na Uy</strong>. Đồng thời, qua việc đối chiếu song ngữ, hy vọng đây cũng là một dịp tốt để chúng ta cùng nhau <strong>trau dồi và nâng cao vốn từ vựng tiếng Anh cũng như tiếng Na Uy (Norsk)</strong>.</p>
 
-                <p>Nội dung các câu hỏi và hình ảnh trên trang web chủ yếu là sản phẩm của quá trình thu thập, chắt lọc và tổng hợp từ nhiều nguồn khác nhau trên internet. Chính vì thế, tôi hiểu rằng hệ thống dữ liệu chắc chắn sẽ không tránh khỏi những thiếu sót, điểm hạn chế, hoặc đôi chỗ dịch thuật chưa thực sự sát nghĩa chuyên ngành.</p>
+                <p>Nội dung các câu hỏi và hình ảnh trên trang web chủ yếu là <em>sản phẩm của quá trình thu thập, chắt lọc và tổng hợp từ nhiều nguồn khác nhau trên internet</em>. Chính vì thế, tôi hiểu rằng hệ thống dữ liệu chắc chắn sẽ không tránh khỏi những thiếu sót, điểm hạn chế, hoặc đôi chỗ dịch thuật chưa thực sự sát nghĩa chuyên ngành.</p>
 
-                <p>Với tinh thần cầu thị và luôn mong muốn hoàn thiện, tôi rất mong sẽ nhận được sự lượng thứ cũng như những ý kiến đóng góp, phản hồi chân thành từ phía mọi người. Hy vọng rằng, cùng với sự chung tay xây dựng của cộng đồng, trang web này sẽ ngày càng hoàn thiện hơn, trở thành một sự lựa chọn hữu ích và người bạn đồng hành đáng tin cậy cho cộng đồng người Việt — đặc biệt là những anh chị em mới sang định cư và hòa nhập cuộc sống tại Na Uy.</p>
+                <p>Với tinh thần cầu thị và luôn mong muốn hoàn thiện, tôi rất mong sẽ nhận được sự lượng thứ cũng như những <strong>ý kiến đóng góp, phản hồi chân thành</strong> từ phía mọi người. Hy vọng rằng, cùng với sự chung tay xây dựng của cộng đồng, trang web này sẽ ngày càng hoàn thiện hơn, trở thành một sự lựa chọn hữu ích và <strong>người bạn đồng hành đáng tin cậy</strong> cho cộng đồng người Việt — đặc biệt là những anh chị em mới sang định cư và hòa nhập cuộc sống tại Na Uy.</p>
 
-                <p>Xin chân thành cảm ơn và chúc mọi người ôn tập thật tốt, thi đạt kết quả cao!</p>
+                <h3 style="color: var(--primary); margin: 32px 0 16px 0; font-size: 20px;">🌟 Các tính năng và tiện ích nổi bật</h3>
+
+                <p style="margin-bottom: 20px; font-weight: 500; color: var(--success); font-size: 16px;">Ứng dụng này hoàn toàn miễn phí và không yêu cầu tạo tài khoản đăng nhập!</p>
+
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li style="margin-bottom: 16px; padding-left: 28px; position: relative;">
+                        <span style="position: absolute; left: 0; top: 0;">🌍</span>
+                        <strong>Học tập song ngữ & Dịch thuật linh hoạt:</strong> Bạn có thể tùy chọn hiển thị câu hỏi bằng tiếng Anh hoặc tiếng Na Uy. Đặc biệt, sau khi chọn đáp án, hệ thống sẽ <span style="color: var(--success); font-weight: 600;">tự động hiển thị phần dịch sang tiếng Việt cùng lời giải thích chi tiết</span>, giúp bạn vừa hiểu rõ luật giao thông, vừa nâng cao vốn ngoại ngữ.
+                    </li>
+                    <li style="margin-bottom: 16px; padding-left: 28px; position: relative;">
+                        <span style="position: absolute; left: 0; top: 0;">📖</span>
+                        <strong>Tra cứu từ vựng trực tiếp (Click-to-translate):</strong> Trong các câu hỏi, những từ vựng chuyên ngành quan trọng sẽ được <span style="color: #0d6efd; font-weight: 600; text-decoration: underline dotted;">gạch chân và tô màu xanh dương</span>. Bạn chỉ cần nhấn vào từ đó, một cửa sổ nhỏ sẽ hiện ra giải thích nghĩa và ngữ cảnh sử dụng. Đặc biệt, những từ bạn đã bấm xem sẽ <span style="color: #fd7e14; font-weight: 600; text-decoration: underline dotted;">tự động chuyển sang màu cam</span>, giúp bạn dễ dàng nhận biết và theo dõi tiến độ học từ vựng của mình mà không mất thời gian tra từ điển.
+                    </li>
+                    <li style="margin-bottom: 16px; padding-left: 28px; position: relative;">
+                        <span style="position: absolute; left: 0; top: 0;">🧠</span>
+                        <strong>Chế độ Ôn tập lý thuyết:</strong> Ngân hàng câu hỏi được chia nhỏ thành các trang <span style="color: var(--primary); font-weight: 600;">(66 câu/trang)</span> để bạn học đến đâu, chắc đến đó. Bạn có thể kiểm tra đáp án ngay lập tức và đọc giải thích cặn kẽ để rút kinh nghiệm.
+                    </li>
+                    <li style="margin-bottom: 16px; padding-left: 28px; position: relative;">
+                        <span style="position: absolute; left: 0; top: 0;">⏱️</span>
+                        <strong>Chế độ Thi thử thực chiến:</strong> Mô phỏng bài thi thật với <span style="color: var(--danger); font-weight: 600;">45 câu hỏi ngẫu nhiên</span> và đồng hồ đếm ngược <span style="color: var(--danger); font-weight: 600;">90 phút</span>. Hệ thống sẽ tự động chấm điểm khi nộp bài (yêu cầu đạt từ <span style="color: var(--success); font-weight: 600;">38/45 câu</span>) để bạn đánh giá chính xác năng lực trước khi đi thi.
+                    </li>
+                    <li style="margin-bottom: 16px; padding-left: 28px; position: relative;">
+                        <span style="position: absolute; left: 0; top: 0;">🚸</span>
+                        <strong>Thư viện Biển báo thông minh:</strong> Tổng hợp các biển báo giao thông Na Uy được phân loại rõ ràng. Bạn có thể dễ dàng tìm kiếm theo tên hoặc mã số. Mỗi biển báo còn kèm theo <span style="font-weight: 600;">các câu hỏi tình huống thực tế</span> thường gặp trong đề thi.
+                    </li>
+                    <li style="margin-bottom: 16px; padding-left: 28px; position: relative;">
+                        <span style="position: absolute; left: 0; top: 0;">📊</span>
+                        <strong>Theo dõi tiến độ cá nhân hóa:</strong> Chức năng "Thống kê" tự động ghi nhận số lượng câu bạn đã học, số lần thi thử và tỷ lệ thi đạt. Toàn bộ dữ liệu này được <span style="color: var(--success); font-weight: 600;">lưu trữ an toàn ngay trên trình duyệt của thiết bị (không đồng bộ lên máy chủ)</span>, giúp bạn dễ dàng theo dõi sự tiến bộ của bản thân mỗi ngày.
+                    </li>
+                </ul>
+
+                <p style="margin-top: 24px; font-weight: 500;">Xin chân thành cảm ơn và chúc mọi người ôn tập thật tốt, thi đạt kết quả cao!</p>
 
                 <div class="contact-box">
                     <h4>Thông tin liên hệ & Góp ý:</h4>
@@ -735,6 +828,12 @@
             }
         }
 
+        // Đóng banner hướng dẫn
+        function closeWelcomeBanner() {
+            document.getElementById('welcomeBanner').style.display = 'none';
+            localStorage.setItem('hideWelcomeBanner', 'true');
+        }
+
         // Quản lý ngôn ngữ
         function changeLanguage() {
             currentLang = document.getElementById('langSelect').value;
@@ -759,6 +858,11 @@
 
         function loadDataFromLocal() {
             trackVisit();
+
+            // Hiển thị Banner nếu người dùng chưa đóng trước đó
+            if (localStorage.getItem('hideWelcomeBanner') !== 'true') {
+                document.getElementById('welcomeBanner').style.display = 'block';
+            }
 
             const savedToggle = localStorage.getItem('isSavingEnabled') === 'true';
             document.getElementById('saveProgressCb').checked = savedToggle;
