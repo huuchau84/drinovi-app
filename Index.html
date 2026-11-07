@@ -28,13 +28,17 @@
             background-color: var(--bg);
             color: var(--text);
             line-height: 1.5;
-            padding-bottom: 60px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
             padding: 16px;
+            flex: 1; /* Đẩy footer xuống đáy */
+            width: 100%;
         }
 
         /* Header & Language Switch */
@@ -598,6 +602,28 @@
                 margin-right: 12px;
                 fill: var(--primary);
             }
+
+        /* Footer Styling */
+        .site-footer {
+            text-align: center;
+            padding: 24px 16px;
+            background: #ffffff;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: auto; /* Đẩy footer xuống đáy */
+        }
+
+            .site-footer a {
+                color: var(--primary);
+                text-decoration: none;
+                font-weight: 500;
+            }
+
+                .site-footer a:hover {
+                    text-decoration: underline;
+                }
     </style>
 
     <!-- Google tag (gtag.js) - Dùng để theo dõi số lượng truy cập -->
@@ -793,6 +819,12 @@
             </div>
         </div>
     </div>
+
+    <!-- Chân trang (Footer) -->
+    <footer class="site-footer">
+        <p>&copy; 2026 Thi Bằng Lái Xe Na Uy. Dự án phi lợi nhuận dành cho cộng đồng người Việt tại Na Uy 🇻🇳🇳🇴</p>
+        <p style="margin-top: 8px;">Góp ý phát triển: <a href="mailto:cucgaxh@gmail.com">cucgaxh@gmail.com</a></p>
+    </footer>
 
     <!-- Modal Popup tra từ vựng -->
     <div id="vocabModal" class="vocab-modal-backdrop" onclick="closeModal()">
